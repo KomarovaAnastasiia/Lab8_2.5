@@ -1,0 +1,83 @@
+//github: https://github.com/KomarovaAnastasiia/Lab8_2.5.git
+
+#include <iostream>
+#include <cstring>
+
+template <typename T>
+void shellSort(T array[], int size) {
+    for (int gap = size / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < size; ++i) {
+            T temp = array[i];
+            int j;
+            for (j = i; j >= gap && array[j - gap] > temp; j -= gap) {
+                array[j] = array[j - gap];
+            }
+            array[j] = temp;
+        }
+    }
+}
+
+// Специфікація для типу char*
+template <>
+void shellSort(char* array[], int size) {
+    for (int gap = size / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < size; ++i) {
+            char* temp = array[i];
+            int j;
+            for (j = i; j >= gap && strcmp(array[j - gap], temp) > 0; j -= gap) {
+                array[j] = array[j - gap];
+            }
+            array[j] = temp;
+        }
+    }
+}
+
+template <typename T>
+int binarySearch(const T array[], int size, const T& key) {
+    int left = 0;
+    int right = size - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (array[mid] == key)
+            return mid;
+        else if (array[mid] < key)
+            left = mid + 1;
+        else
+            right = mid - 1;
+    }
+    return -1; // Ключ не знайдено
+}
+
+// Специфікація для типу char*
+template <>
+int binarySearch(char* const array[], int size, const char* const& key) {
+    int left = 0;
+    int right = size - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        int cmp = strcmp(array[mid], key);
+        if (cmp == 0)
+            return mid;
+        else if (cmp < 0)
+            left = mid + 1;
+        else
+            right = mid - 1;
+    }
+    return -1; // Ключ не знайдено
+}
+
+int main() {
+    int intArray[] = {1, 3, 5, 7, 9, 11, 13, 15};
+    shellSort(intArray, 8);
+    std::cout << "Індекс 7 у відсортованому масиві: " << binarySearch(intArray, 8, 7) << std::endl;
+
+    double doubleArray[] = {1.5, 2.5, 3.5, 4.5, 5.5};
+    shellSort(doubleArray, 5);
+    std::cout << "Індекс 3,5 у відсортованому масиві: " << binarySearch(doubleArray, 5, 3.5) << std::endl;
+
+    const char* strArray[] = {"apple", "banana", "grape", "orange", "pineapple"};
+    shellSort(strArray, 5);
+    std::cout << "Індекс 'orange' у відсортованому масиві: " << binarySearch(strArray, 5, "orange") << std::endl;
+
+    return 0;
+}
